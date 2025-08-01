@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Heiress Crash Lands on Her Husband</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 0 15px;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .responsive-video {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      background: #000;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-bottom: 10px;
+    }
+
+    .responsive-video iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 0;
+      border-radius: 8px;
+    }
+
+    #fakeDownload {
+      display: block;
+      margin: 15px auto;
+      background: red;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #fakeDownload:hover {
+      background: darkred;
+    }
+
+    #blockedMessage {
+      display: none;
+      text-align: center;
+      color: red;
+      font-size: 1.3rem;
+      padding: 20px;
+      border: 2px dashed red;
+      border-radius: 8px;
+      margin-top: 20px;
+      background: #ffe6e6;
+    }
+
+    .reaction-btn {
+      font-size: 24px;
+      cursor: pointer;
+      user-select: none;
+      margin: 5px;
+      border: none;
+      background: none;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    .pop {
+      animation: pop 0.3s ease;
+    }
+
+    /* Pop-up styles */
+    .popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: left;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    .popup-content h3 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .popup-content textarea {
+      width: 100%;
+      height: 120px;
+      resize: none;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      background: #f8f8f8;
+    }
+
+    .popup-content label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .popup-content input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .popup-content button {
+      padding: 10px 20px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .tabBtn {
+      padding: 8px 16px;
+      border: none;
+      background: #eee;
+      margin: 0 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .tabBtn:hover {
+      background: #ddd;
+    }
+
+    .tabContent {
+      display: none;
+    }
+
+    #tabContentTerms,
+    #tabContentRules {
+      display: none;
+    }
+
+    #errorMsg {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ❌ Blocked message -->
+<div id="blockedMessage">❌ You are blocked from viewing this video due to unauthorized actions.</div>
+
+<!-- ✅ Pop-up with new features -->
+<div id="termsPopup" class="popup">
+  <div class="popup-content">
+    <h3>📋 Terms of Use <span style="background: orange; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">NEW</span></h3>
+
+    <div style="text-align: center; margin-bottom: 10px;">
+      <button class="tabBtn" onclick="showTab('terms')">Terms</button>
+      <button class="tabBtn" onclick="showTab('rules')">Rules</button>
+    </div>
+
+    <div id="tabContentTerms" class="tabContent">
+      <textarea readonly>
+By using this video, you agree to the following:
+- Do NOT download or redistribute this content.
+- Violating terms may result in a permanent block.
+- We may update terms anytime.
+      </textarea>
+    </div>
+
+    <div id="tabContentRules" class="tabContent">
+      <textarea readonly>
+Please follow these rules:
+- Be respectful in reactions.
+- No bots or automation.
+- Do not share private links.
+      </textarea>
+    </div>
+
+    <label><input type="checkbox" id="agreeCheck"> I accept the updated Terms and Rules</label>
+    <button id="acceptTermsBtn" disabled>✅ Continue</button>
+    <div id="errorMsg"></div>
+  </div>
+</div>
+
+<!-- ✅ Main video container -->
+<div id="videoContainer">
+  <div class="responsive-video">
+    <iframe
+      id="videoPlayer"
+      src="https://www.dailymotion.com/embed/video/x9hyafg?autoplay=1&mute=1"
+      allowfullscreen
+      allow="autoplay"
+      title="Heiress Crash Lands on Her Husband"
+    ></iframe>
+  </div>
+
+  <!-- Reaction buttons -->
+  <div id="reactionBar" style="text-align: center;">
+    <button class="reaction-btn" data-reaction="like">👍</button>
+    <button class="reaction-btn" data-reaction="love">❤️</button>
+    <button class="reaction-btn" data-reaction="laugh">😂</button>
+    <button class="reaction-btn" data-reaction="surprised">😮</button>
+  </div>
+
+  <!-- Download trap -->
+  <button id="fakeDownload">🔽 Download Video</button>
+</div>
+
+<script>
+  const SECRET_CODE = "unlock123";
+
+  const isBlocked = localStorage.getItem("videoBlocked") === "1";
+  const agreed = localStorage.getItem("termsAccepted") === "1";
+
+  const termsPopup = document.getElementById("termsPopup");
+  const agreeCheck = document.getElementById("agreeCheck");
+  const acceptBtn = document.getElementById("acceptTermsBtn");
+  const errorMsg = document.getElementById("errorMsg");
+
+  const videoContainer = document.getElementById("videoContainer");
+  const blockedMessage = document.getElementById("blockedMessage");
+  const downloadButton = document.getElementById("fakeDownload");
+
+  // Show pop-up tabs
+  function showTab(tab) {
+    document.getElementById("tabContentTerms").style.display = tab === "terms" ? "block" : "none";
+    document.getElementById("tabContentRules").style.display = tab === "rules" ? "block" : "none";
+  }
+
+  // Initial tab
+  showTab('terms');
+
+  // Enable button only if checkbox is checked
+  agreeCheck.addEventListener("change", () => {
+    acceptBtn.disabled = !agreeCheck.checked;
+  });
+
+  // Accept terms
+  acceptBtn.addEventListener("click", () => {
+    if (agreeCheck.checked) {
+      localStorage.setItem("termsAccepted", "1");
+      termsPopup.style.display = "none";
+      videoContainer.style.display = "block";
+    }
+  });
+
+  // Show T&C popup if not agreed and not blocked
+  if (!agreed && !isBlocked) {
+    termsPopup.style.display = "flex";
+    videoContainer.style.display = "none";
+  }
+
+  // Blocked state
+  if (isBlocked) {
+    videoContainer.style.display = "none";
+    blockedMessage.style.display = "block";
+    termsPopup.style.display = "none";
+  }
+
+  // Fake download trap
+  downloadButton.addEventListener("click", () => {
+    alert("⚠️ You have been blocked for trying to download this video.");
+    localStorage.setItem("videoBlocked", "1");
+    videoContainer.style.display = "none";
+    blockedMessage.style.display = "block";
+    termsPopup.style.display = "none";
+  });
+
+  // Reaction button sound + animation
+  const clickSound = new Audio('https://actions.google.com/sounds/v1/buttons/button_click.mp3');
+  document.getElementById('reactionBar').addEventListener('click', e => {
+    const btn = e.target.closest('.reaction-btn');
+    if (btn) {
+      btn.classList.add('pop');
+      clickSound.cloneNode().play();
+      btn.addEventListener('animationend', () => {
+        btn.classList.remove('pop');
+      }, { once: true });
+    }
+  });
+</script>
+
+</body>
+</html>
